@@ -1,28 +1,28 @@
 def cover_with_stars(hypergraph):
-    """  Implements the hypergraph covering with stars problem.
-    Args:  hypergraph (dict): A dictionary representing the hypergraph. Keys are vertices,  values are sets of edges that the vertex belongs to.
-    Returns:  list: A list of stars covering the hypergraph.  """
+    """ Реализует задачу о покрытии гиперграфа звездочками.
+        Аргументы: гиперграф (dict): словарь, представляющий гиперграф. Ключами являются вершины,
+    значениями - наборы ребер, к которым принадлежит вершина.
+        Возвращает: список: список звездочек, покрывающих гиперграф.  """
     stars = []
     uncovered_edges = {frozenset(edge) for edge in hypergraph.values()}
 
-    while uncovered_edges:  # Select the edge with the maximum number of uncovered vertices
-        # Fix: Correctly use set.union()
+    # Выбираем ребро с максимальным количеством непокрытых вершин
+    while uncovered_edges:
         max_edge = max(uncovered_edges, key=lambda x: len(x - (x.union(*stars))))
         star = set(max_edge)
-        # Add the edge to the star and remove it from uncovered edges
+        # Добавьте ребро к звезде и удалите ее с незакрытых рёбер
         stars.append(star)
         uncovered_edges.remove(max_edge)
 
     return stars
 
 
-# Example usage
 hypergraph = {'A': {'A1', 'A2', 'A3'},
               'B': {'A1', 'B2', 'B3'},
               'C': {'B2', 'C3', 'C4'},
               'D': {'C3', 'D4', 'D5'}, }
 
 stars = cover_with_stars(hypergraph)
-print("Stars covering the hypergraph:")
+print("Звезды, покрывающие гиперграф:")
 for i, star in enumerate(stars):
-    print(f"Star {i + 1}: {star}")
+    print(f"Звезда {i + 1}: {star}")
