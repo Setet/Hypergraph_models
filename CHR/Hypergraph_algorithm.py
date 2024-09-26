@@ -1,8 +1,5 @@
-import tkinter
 import tkinter as tk
 from tkinter import *
-from tkinter import scrolledtext, messagebox
-from tkinter.ttk import Style
 import networkx as nx
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
