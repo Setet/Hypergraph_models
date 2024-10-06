@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import *
+from tkinter import scrolledtext
+
 import networkx as nx
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
@@ -34,9 +36,9 @@ def run_algorithm():
     stars = cover_with_stars(hypergraph)
 
     # Отображаю результаты
-    result_listbox.delete(0, tk.END)
+    result_scrolledtext.delete(1.0, END)
     for i, star in enumerate(stars):
-        result_listbox.insert(tk.END, f"Звезда {i + 1}: {star}")
+        result_scrolledtext.insert(tk.END, f"Звезда {i + 1}: {star}\n")
 
     print("Гиперграф - " + str(hypergraph))
     print("Звёзды - " + str(stars))
@@ -139,8 +141,9 @@ run_button.pack()
 # Результат метка и поля списка
 result_label = tk.Label(window, text="Звезды, покрывающие гиперграф:", font=('Arial', 15))
 result_label.pack()
-result_listbox = tk.Listbox(window, height=5, font=('Arial', 15))
-result_listbox.pack()
+
+result_scrolledtext = scrolledtext.ScrolledText(window, height=5, font=('Arial', 15))
+result_scrolledtext.pack()
 
 # Рамка для отображения гиперграфа
 graph_frame = tk.Frame(window)
