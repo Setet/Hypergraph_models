@@ -66,7 +66,9 @@ class HypergraphApp(tk.Tk):
                 hyperedge = set(random.sample(range(num_vertices), hyperedge_size))
                 hyperedges.append(hyperedge)
 
+        print(str(hyperedges))
         hypergraph = HnxHypergraph(hyperedges)
+        print(str(hypergraph))
         articulation_points = self.find_articulation_points_in_hypergraph(hyperedges)
         print("Точки сочленения в гиперграфе:", articulation_points)
         self.visualize_hypergraph_with_articulation_points(hypergraph, articulation_points)
