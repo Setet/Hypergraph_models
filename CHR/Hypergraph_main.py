@@ -8,16 +8,6 @@ import hypernetx as hnx
 
 # Функция покрытие гиперграфа звездами с помощью жадного алгоритма.
 def find_star_vertices(hypergraph):
-    """
-    Находит вершины звезды в гиперграфе.
-
-    Args:
-      hypergraph: Список множеств, представляющих ребра гиперграфа.
-
-    Returns:
-      Список вершин звезды.
-    """
-
     # Создаем словарь для хранения количества ребер, содержащих каждую вершину.
     vertex_counts = {}
     for edge in hypergraph:
@@ -46,6 +36,7 @@ class HypergraphApp(tk.Tk):
 
         self.create_widgets()
 
+    # Создание интерфейса
     def create_widgets(self):
         # Верхняя часть для ввода данных
         input_frame = tk.Frame(self)
@@ -77,7 +68,7 @@ class HypergraphApp(tk.Tk):
         self.graph_frame = tk.Frame(self)
         self.graph_frame.pack()
 
-    # Тут мы либо случайно генерим, или ручками
+    # Создание гиперграфа
     def generate_and_cover(self):
         num_vertices = int(self.vertex_input.get())
         num_hyperedges = int(self.hyperedge_input.get())
@@ -112,6 +103,7 @@ class HypergraphApp(tk.Tk):
         # Визуализируем гиперграф с покрытием звездами
         self.visualize_hypergraph_with_star_covering(hyperedges, star_covering)
 
+    # Визуализация гиперграфа
     def visualize_hypergraph_with_star_covering(self, hypergraph, star_covering):
         # Очищаем предыдущий график, если он есть
         for widget in self.graph_frame.winfo_children():
