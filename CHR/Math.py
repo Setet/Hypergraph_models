@@ -1,27 +1,37 @@
-def find_star_vertices(hypergraph):
+def cover_hypergraph_with_stars(hypergraph):
     """
-    Находит вершины звезды в гиперграфе.
+    Алгоритм покрытия гиперграфа звёздами.
 
     Args:
-      hypergraph: Список множеств, представляющих ребра гиперграфа.
+        hypergraph: Список множеств, представляющих гиперребра.
 
     Returns:
-      Список вершин звезды.
+        Список звезд, покрывающих все вершины.
     """
 
-    # Создаем словарь для хранения количества ребер, содержащих каждую вершину.
-    vertex_counts = {}
-    for edge in hypergraph:
-        for vertex in edge:
-            if vertex not in vertex_counts:
-                vertex_counts[vertex] = 0
-            vertex_counts[vertex] += 1
+    # Инициализация
+    stars = []  # Список звезд
+    uncovered_vertices = set().union(*hypergraph)  # Множество непокрытых вершин
+    i = 0
 
-    # Находим вершины, которые принадлежат максимальному количеству ребер.
-    max_count = max(vertex_counts.values())
-    star_vertices = [vertex for vertex, count in vertex_counts.items() if count == max_count]
+    # Цикл, пока есть непокрытые вершины
+    while uncovered_vertices:
+        # Выбираем произвольную непокрытую вершину
+        vertex = uncovered_vertices.pop()
 
-    return star_vertices
+        # Находим гиперребра, содержащие выбранную вершину
+        star = [edge for edge in hypergraph if vertex in edge]
+
+        # Добавляем звезду в список звезд
+        stars.append(star)
+
+        # Удаляем покрытые вершины из множества непокрытых вершин
+        uncovered_vertices.difference_update(set().union(*star))
+
+        # Увеличиваем счетчик
+        i += 1
+
+    return stars
 
 
 # Пример использования:
@@ -30,5 +40,10 @@ hypergraph = [{0, 1, 2, 3, 5, 6, 13, 14, 17},
               {2, 4, 6, 7, 9, 10, 15, 16, 17},
               {0, 1, 5},
               {2, 3, 6, 11, 12, 14, 16, 17, 19}]
-star_vertices = find_star_vertices(hypergraph)
-print("Вершины звезды:", star_vertices)
+
+stars = cover_hypergraph_with_stars(hypergraph)
+
+print(str(stars))
+
+for i, star in enumerate(stars):
+    print(f"Звезда {i + 1}: {star}")
