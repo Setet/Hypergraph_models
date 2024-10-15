@@ -35,15 +35,15 @@ def cover_hypergraph_with_stars(hypergraph):
 
 
 # Пример использования:
-hypergraph = [{0, 1, 2, 3, 5, 6, 13, 14, 17},
-              {1, 6, 9, 14, 16, 17},
-              {2, 4, 6, 7, 9, 10, 15, 16, 17},
-              {0, 1, 5},
-              {2, 3, 6, 11, 12, 14, 16, 17, 19}]
+hypergraph = [{8, 17, 14},
+              {4, 5, 6, 17, 19},
+              {19, 6, 15},
+              {1, 3, 14, 6},
+              {2, 6, 7, 8, 10, 12, 17}]
 
 stars = cover_hypergraph_with_stars(hypergraph)
 
-print(str(stars))
+# print(str(stars))
 
 for i, star in enumerate(stars):
     print(f"Звезда {i + 1}: {star}")
