@@ -9,9 +9,10 @@ def cover_hypergraph_with_stars(hypergraph):
         Список звезд, покрывающих все вершины.
     """
 
-    # Инициализация
-    stars = []  # Список звезд
-    uncovered_vertices = set().union(*hypergraph)  # Множество непокрытых вершин
+    # Список звезд
+    stars = []
+    # Множество непокрытых вершин
+    uncovered_vertices = set().union(*hypergraph)
     i = 0
 
     # Цикл, пока есть непокрытые вершины
@@ -34,7 +35,6 @@ def cover_hypergraph_with_stars(hypergraph):
     return stars
 
 
-# Пример использования:
 hypergraph = [{8, 17, 14},
               {4, 5, 6, 17, 19},
               {19, 6, 15},
