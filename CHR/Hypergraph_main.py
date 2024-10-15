@@ -6,7 +6,7 @@ from hypernetx import Hypergraph as HnxHypergraph
 import hypernetx as hnx
 
 
-# Функция покрытие гиперграфа звездами с помощью жадного алгоритма.
+# Функция покрытие гиперграфа звездами
 def cover_hypergraph_with_stars(hypergraph):
     """
     Алгоритм покрытия гиперграфа звёздами.
@@ -18,9 +18,10 @@ def cover_hypergraph_with_stars(hypergraph):
         Список звезд, покрывающих все вершины.
     """
 
-    # Инициализация
-    stars = []  # Список звезд
-    uncovered_vertices = set().union(*hypergraph)  # Множество непокрытых вершин
+    # Список звезд
+    stars = []
+    # Множество непокрытых вершин
+    uncovered_vertices = set().union(*hypergraph)
     i = 0
 
     # Цикл, пока есть непокрытые вершины
@@ -90,9 +91,13 @@ class HypergraphApp(tk.Tk):
 
     # Создание гиперграфа
     def generate_and_cover(self):
+        # Кол-во вершин
         num_vertices = int(self.vertex_input.get())
+
+        # Кол-во рёбер
         num_hyperedges = int(self.hyperedge_input.get())
 
+        # Поле ручного ввода
         manual_hyperedges_text = self.manual_hyperedges_input.get("1.0", tk.END).strip()
 
         hyperedges = []
@@ -112,11 +117,8 @@ class HypergraphApp(tk.Tk):
                 hyperedge = set(random.sample(range(num_vertices), hyperedge_size))
                 hyperedges.append(hyperedge)
 
-        #         h = HnxHypergraph(hypergraph)
-        #         print(h)
         print("Гиперграф: ", str(hyperedges))
 
-        # Находим покрытие звездами
         star_covering = cover_hypergraph_with_stars(hyperedges)
         print("Покрытие звездами: ", star_covering)
 
@@ -129,11 +131,10 @@ class HypergraphApp(tk.Tk):
         for widget in self.graph_frame.winfo_children():
             widget.destroy()
 
-        # Создаем объект гиперграфа из списка ребер
+        # Создаем объект гиперграфа
         h = HnxHypergraph(hypergraph)
-        print(str(h))
+        # print(str(h))
 
-        # Рисуем гиперграф
         hnx.drawing.draw(h, with_color=True)
 
         plt.title('Визуализация гиперграфа с покрытием звездами')
@@ -141,7 +142,7 @@ class HypergraphApp(tk.Tk):
         # Выводим звезды
         for center_vertex in star_covering:
             plt.scatter([], [], color='blue', marker='*', label=f'{center_vertex}')
-            # plt.plot(B[center_vertex].nonzero()[0], B[center_vertex].nonzero()[1], 'bo', markersize=10)
+            # plt.plot(B[center_vertex].nonzero()[0], B[center_vertex].nonzero()[1], 'bo', marker-size=10)
         plt.legend(title="Звёзды")
 
         # Создаем FigureCanvasTkAgg для Tkinter
