@@ -1,110 +1,54 @@
-import tkinter as tk
-from tkinter import ttk
-import random
-import networkx as nx
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from hypernetx import Hypergraph as HnxHypergraph
-import hypernetx as hnx
+from collections import defaultdict
 
 
-class HypergraphApp(tk.Tk):
-    def __init__(self):
-        super().__init__()
-        self.title("Визуализация гиперграфа")
-        self.geometry("500x500")
+def hypergraph_star_covering(hypergraph):
+    """
+    Решает задачу покрытия гиперграфа звёздами.
 
-        self.create_widgets()
+    Args:
+        hypergraph: Список множеств, представляющий гиперграф.
 
-    def create_widgets(self):
-        # Верхняя часть для ввода данных
-        input_frame = tk.Frame(self)
-        input_frame.pack(pady=10)
+    Returns:
+        Словарь, где ключи - номера звёзд, а значения - кортежи из
+        списка гиперрёбер звезды и её центра.
+    """
 
-        # Количество вершин
-        vertex_label = tk.Label(input_frame, text="Количество вершин:")
-        vertex_label.pack(side=tk.LEFT)
-        self.vertex_input = tk.Spinbox(input_frame, from_=1, to=100, width=5)
-        self.vertex_input.pack(side=tk.LEFT, padx=5)
+    stars = {}
+    used_edges = set()
 
-        # Количество гиперребер
-        hyperedge_label = tk.Label(input_frame, text="Количество гиперребер:")
-        hyperedge_label.pack(side=tk.LEFT)
-        self.hyperedge_input = tk.Spinbox(input_frame, from_=1, to=100, width=5)
-        self.hyperedge_input.pack(side=tk.LEFT, padx=5)
+    # Проходим по всем гиперрёбрам
+    for i, edge in enumerate(hypergraph):
+        # Если гиперрёбро ещё не использовано
+        if i not in used_edges:
+            # Находим центр звезды
+            center = list(edge)[0]
+            # Собираем гиперрёбра звезды
+            star_edges = [edge]
+            for j, other_edge in enumerate(hypergraph):
+                # Если центр звезды находится в другом гиперрёбре
+                if center in other_edge and j != i:
+                    # Добавляем гиперрёбро в звезду и помечаем его как использованное
+                    star_edges.append(other_edge)
+                    used_edges.add(j)
 
-        # Ввод гиперребер вручную
-        manual_hyperedges_label = tk.Label(input_frame, text="Введите гиперребра вручную (например, {1,2,3}):")
-        manual_hyperedges_label.pack(pady=5)
-        self.manual_hyperedges_input = tk.Text(input_frame, height=5, width=30)
-        self.manual_hyperedges_input.pack()
+            # Добавляем звезду в словарь
+            stars[len(stars) + 1] = (star_edges, center)
 
-        # Кнопка генерации
-        generate_button = tk.Button(self, text="Сгенерировать и визуализировать", command=self.generate_hypergraph)
-        generate_button.pack(pady=10)
-
-        # Нижняя часть для вывода графика
-        self.graph_frame = tk.Frame(self)
-        self.graph_frame.pack()
-
-    def generate_hypergraph(self):
-        num_vertices = int(self.vertex_input.get())
-        num_hyperedges = int(self.hyperedge_input.get())
-        manual_hyperedges_text = self.manual_hyperedges_input.get("1.0", tk.END).strip()
-        hyperedges = []
-        if manual_hyperedges_text:
-            try:
-                for line in manual_hyperedges_text.splitlines():
-                    hyperedge = set(map(int, line.strip().strip('{}').split(',')))
-                    hyperedges.append(hyperedge)
-            except ValueError:
-                print("Ошибка ввода гиперребер. Убедитесь, что они заданы в правильном формате.")
-                return
-        else:
-            for _ in range(num_hyperedges):
-                hyperedge_size = random.randint(2, min(10, num_vertices))
-                hyperedge = set(random.sample(range(num_vertices), hyperedge_size))
-                hyperedges.append(hyperedge)
-
-        print(str(hyperedges))
-        hypergraph = HnxHypergraph(hyperedges)
-        print(str(hypergraph))
-        articulation_points = self.find_articulation_points_in_hypergraph(hyperedges)
-        print("Точки сочленения в гиперграфе:", articulation_points)
-        self.visualize_hypergraph_with_articulation_points(hypergraph, articulation_points)
-
-    def find_articulation_points_in_hypergraph(self, hyperedges):
-        G = nx.Graph()
-        for hyperedge in hyperedges:
-            vertices = list(hyperedge)
-            for i in range(len(vertices)):
-                for j in range(i + 1, len(vertices)):
-                    u, v = vertices[i], vertices[j]
-                    G.add_edge(u, v)
-        articulation_points = list(nx.articulation_points(G))
-        return articulation_points
-
-    def visualize_hypergraph_with_articulation_points(self, hypergraph, articulation_points):
-        # Очищаем предыдущий график, если он есть
-        for widget in self.graph_frame.winfo_children():
-            widget.destroy()
-
-        # Рисуем график
-        B = hypergraph.incidence_matrix()
-        hnx.drawing.draw(hypergraph, with_color=True)
-        plt.title('Визуализация гиперграфа с выделенными точками сочленения')
-        for point in articulation_points:
-            plt.scatter([], [], color='red', label=f'Точка сочленения: {point}')
-        plt.legend()
-
-        # Создаем FigureCanvasTkAgg для Tkinter
-        figure = plt.gcf()
-        canvas = FigureCanvasTkAgg(figure, master=self.graph_frame)
-        canvas.draw()
-        canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
-        plt.close(figure)
+    # Выводим результат
+    for star_id, (star_edges, center) in stars.items():
+        print(f"Звезда №{star_id} - {star_edges}: центр = {center}")
 
 
-if __name__ == '__main__':
-    app = HypergraphApp()
-    app.mainloop()
+# Пример использования
+hypergraph = [
+    {1, 3, 9},
+    {1, 5, 10},
+    {1, 6, 11},
+    {2, 4, 12},
+    {2, 7, 13},
+    {2, 8, 14},
+    {1, 4, 9},
+    {2, 6, 13}
+]
+
+hypergraph_star_covering(hypergraph)
