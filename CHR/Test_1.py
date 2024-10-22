@@ -1,6 +1,3 @@
-from collections import defaultdict
-
-
 def hypergraph_star_covering(hypergraph):
     """
     Решает задачу покрытия гиперграфа звёздами.
@@ -27,7 +24,8 @@ def hypergraph_star_covering(hypergraph):
             for j, other_edge in enumerate(hypergraph):
                 # Если центр звезды находится в другом гиперрёбре
                 if center in other_edge and j != i:
-                    # Добавляем гиперрёбро в звезду и помечаем его как использованное
+                    # Добавляем гиперрёбро в звезду и
+                    # помечаем его как использованное
                     star_edges.append(other_edge)
                     used_edges.add(j)
 
