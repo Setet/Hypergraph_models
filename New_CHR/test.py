@@ -13,17 +13,24 @@ def hypertree_width_approximation(hypergraph):
     """
 
     nodes = set()
+
     for edge in hypergraph:
         nodes.update(edge)
+
     nodes = list(nodes)
     num_nodes = len(nodes)
 
     best_width = float('inf')
 
-    # Итеративный жадный алгоритм (простая эвристика)
-    for _ in range(10):  # число итераций можно изменить для улучшения качества приближения
+    # Число итераций
+    interactions = 100
+
+    # Итеративный жадный алгоритм
+    for _ in range(interactions):
         ordering = list(range(num_nodes))
-        random.shuffle(ordering)  # Перемешивание вершин для случайного старта
+
+        # Перемешиваю вершины для случайного старта
+        random.shuffle(ordering)
 
         width = 0
         for i in range(num_nodes):
